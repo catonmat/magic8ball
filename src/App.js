@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
-import logo from './logo.svg';
 import eightball from './eightball.png'
 import './App.css';
 
@@ -17,72 +16,71 @@ function App() {
 
 function EightBall() {
   const [thinking, setThinking] = useState(false)
-  const [profession, setProfession] = useState(false)
+  const [answer, setAnswer] = useState(false)
 
-  const professions = [
-    'Lion Tamer',
-    'Dentist',
-    'Magician',
-    'Escort',
-    'Programmer',
-    'Musician',
-    'President'
-  ]
-
-  const handleQuestion = () => {
+  function handleThinking() {
     setThinking(true)
-    setTimeout(() => { 
-      const randomIndex = _.random(0, professions.length-1)
-      setProfession(professions[randomIndex])
-      setThinking(false) 
+    setTimeout(() => {
+      const randomChoice = _.random(0,100)
+      if (randomChoice <= 50 ) {
+        setAnswer('I think you should do it.')
+      } else {
+        setAnswer('I think you should reconsider; this is not a wise choice.')
+      }
+      setThinking(false)
     }, 2000)
+  }
+
+  function handleReset() {
+    setAnswer(false)
   }
 
   return (
     <>
       {
-        !profession && (
-          <p>
-            Lara, what profession will you be?
-          </p>
+        !thinking && !answer && (
+          <>
+            <p>♎  Please ask me a question Mariana! ♎ </p>
+            <textarea 
+              cols="30" 
+              rows="10"
+              placeholder="I can look into the future paths of the multi-verse and select the optimal route for you..."
+            >
+            </textarea>
+            <button
+              onClick={() => handleThinking()}
+            >
+              Submit!
+            </button>
+          </>
         )
       }
       {
-        profession && (
-          <p>
-            I think you should be a {profession}!
-          </p>
+        !thinking && answer && (
+          <>
+            <p>{answer}</p>
+            <p>Feel free to ask another question!</p>
+            <button
+              onClick={() => handleReset()}
+            >
+              Ask again!
+            </button>
+          </>
         )
       }
       {
-        thinking && (
-          <button
-            disabled
-          >
-            Hmmm... give me a second or two, I'm thinking...
-          </button>
-        )
-      }
-      {
-        !thinking && !profession && (
-          <button
-            onClick={handleQuestion}
-          >
-            Ask me!
-          </button>
-        )
-      }
-      {
-        !thinking && profession && (
-          <button
-           onClick={handleQuestion}
-          >
-            Ask me again!
-          </button>
-        )
+        thinking && <Thinking />
       }
     </>
   )
 }
+
+
+const Thinking = () => (
+  <>
+    <p>I'm thinking...</p>
+  </>
+)
+
 
 export default App;
